@@ -1,3 +1,5 @@
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,14 +18,12 @@ public class Nodo<T extends Comparable<T>> {
     private ArrayList<Nodo> kids; // pointers
     private ArrayList<T> values = new ArrayList<T>();
 
-
     // private Nodo<T> next;
 
-    public void Nodo() 
-    {
+    public void Nodo() {
         this.kids = null;
         this.values = null;
-   
+
     }
 
     public void addValue(T value) {
@@ -31,8 +31,7 @@ public class Nodo<T extends Comparable<T>> {
         // Ordenar hijos OrderValues();
     }
 
-    public void addchild(Nodo child) 
-    {
+    public void addchild(Nodo child) {
         this.kids.add(child);
         Collections.sort((List<T>) this.kids);
     }
