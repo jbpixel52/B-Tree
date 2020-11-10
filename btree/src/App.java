@@ -6,13 +6,8 @@ public class App {
         System.out.println("Hello, World!");
        // ArbolB BabyYoda = new randomTree();
         ArbolB b = new ArbolB<>(100);
-        b.Insert(8);
-        b.Insert(9);
-        b.Insert(10);
-        b.Insert(11);
-        b.Insert(15);
-        b.Insert(20);
-        b.Insert(17);
+
+
         Random random = new Random();
         ArrayList<Integer> randoms = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
