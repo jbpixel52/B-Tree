@@ -1,5 +1,5 @@
 
-
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class ArbolB<T extends Comparable<T>> {
@@ -8,24 +8,27 @@ public class ArbolB<T extends Comparable<T>> {
 
   public class Node<T> {
     int n;
-    T key[];
+    // T key[];
+    ArrayList<T> key = new ArrayList<>();
     Node<T> child[];
     boolean leaf = true;
 
     public int Find(T k) {
       for (int i = 0; i < this.n; i++) {
-        if (this.key[i] == k) {
+        if (this.key.get(i) == k) {
           return i;
         }
       }
       return -1;
     };
   }
+
   public ArbolB() {
     root = new Node<T>();
     root.n = 0;
     root.leaf = true;
   }
+
   public ArbolB(int t) {
     T = t;
     root = new Node<T>();
@@ -40,10 +43,10 @@ public class ArbolB<T extends Comparable<T>> {
     if (x == null)
       return x;
     for (i = 0; i < x.n; i++) {
-      if (key.compareTo(x.key[i]) < 0) {
+      if (key.compareTo(x.key.get(i)) < 0) {
         break;
       }
-      if (key == x.key[i]) {
+      if (key == x.key.get(i)) {
         return x;
       }
     }
@@ -59,7 +62,7 @@ public class ArbolB<T extends Comparable<T>> {
     z.leaf = y.leaf;
     z.n = T - 1;
     for (int j = 0; j < T - 1; j++) {
-      z.key[j] = y.key[j + T];
+      z.key.set(j, y.key.get(j + T));
     }
     if (!y.leaf) {
       for (int j = 0; j < T; j++) {
@@ -73,9 +76,10 @@ public class ArbolB<T extends Comparable<T>> {
     x.child[pos + 1] = z;
 
     for (int j = x.n - 1; j >= pos; j--) {
-      x.key[j + 1] = x.key[j];
+      // x.key[j + 1] = x.key[j];
+      x.key.set(j + 1, x.key.get(j));
     }
-    x.key[pos] = y.key[T - 1];
+    x.key.set(pos, y.key.get(T - 1));
     x.n = x.n + 1;
   }
 
@@ -99,21 +103,21 @@ public class ArbolB<T extends Comparable<T>> {
 
     if (x.leaf) {
       int i = 0;
-      for (i = x.n - 1; i >= 0 && k.compareTo(x.key[i]) < 0; i--) {
-        x.key[i + 1] = x.key[i];
+      for (i = x.n - 1; i >= 0 && k.compareTo(x.key.get(i)) < 0; i--) {
+        x.key.set(i + 1, x.key.get(i));
       }
-      x.key[i + 1] = k;
-      x.n = x.n + 1;
+        x.key.set(i + 1, k);
+        x.n = x.n + 1;
     } else {
       int i = 0;
-      for (i = x.n - 1; i >= 0 && k.compareTo(x.key[i]) < 0; i--) {
+      for (i = x.n - 1; i >= 0 && k.compareTo(x.key.get(i)) < 0; i--) {
       }
       ;
       i++;
       Node<T> tmp = x.child[i];
       if (tmp.n == 2 * T - 1) {
         Split(x, i, tmp);
-        if (k.compareTo(x.key[i]) > 0) {
+        if (k.compareTo(x.key.get(i)) > 0) {
           i++;
         }
       }
@@ -131,12 +135,12 @@ public class ArbolB<T extends Comparable<T>> {
     if (pos != -1) {
       if (x.leaf) {
         int i = 0;
-        for (i = 0; i < x.n && x.key[i] != key; i++) {
+        for (i = 0; i < x.n && x.key.get(i) != key; i++) {
         }
         ;
         for (; i < x.n; i++) {
           if (i != 2 * T - 2) {
-            x.key[i] = x.key[i + 1];
+            x.key.set(i, x.key.get(i + 1));
           }
         }
         x.n--;
@@ -150,25 +154,26 @@ public class ArbolB<T extends Comparable<T>> {
           for (;;) {
             if (pred.leaf) {
               System.out.println(pred.n);
-              predKey = pred.key[pred.n - 1];
+              predKey = pred.key.get(pred.n - 1);
               break;
             } else {
               pred = pred.child[pred.n];
             }
           }
           Remove(pred, predKey);
-          x.key[pos] = predKey;
+          x.key.set(pos, predKey);
           return;
         }
 
         Node<T> nextNode = x.child[pos + 1];
         if (nextNode.n >= T) {
-          T nextKey = nextNode.key[0];
+          //T nextKey = nextNode.key[0];
+          T nextKey = nextNode.key.get(0);
           if (!nextNode.leaf) {
             nextNode = nextNode.child[0];
             for (;;) {
               if (nextNode.leaf) {
-                nextKey = nextNode.key[nextNode.n - 1];
+                nextKey = nextNode.key.get(nextNode.n - 1);
                 break;
               } else {
                 nextNode = nextNode.child[nextNode.n];
@@ -176,14 +181,16 @@ public class ArbolB<T extends Comparable<T>> {
             }
           }
           Remove(nextNode, nextKey);
-          x.key[pos] = nextKey;
+          x.key.set(pos, nextKey);
           return;
         }
 
         int temp = pred.n + 1;
-        pred.key[pred.n++] = x.key[pos];
+//        pred.key[pred.n++] = x.key[pos];
+        pred.key.set(pred.n++, x.key.get(pos));
         for (int i = 0, j = pred.n; i < nextNode.n; i++) {
-          pred.key[j++] = nextNode.key[i];
+//          pred.key[j++] = nextNode.key[i];
+          pred.key.set(j++, nextNode.key.get(i));
           pred.n++;
         }
         for (int i = 0; i < nextNode.n + 1; i++) {
@@ -193,7 +200,8 @@ public class ArbolB<T extends Comparable<T>> {
         x.child[pos] = pred;
         for (int i = pos; i < x.n; i++) {
           if (i != 2 * T - 2) {
-            x.key[i] = x.key[i + 1];
+//            x.key[i] = x.key[i + 1];
+            x.key.set(i, x.key.get(i + 1));
           }
         }
         for (int i = pos + 1; i < x.n + 1; i++) {
@@ -213,7 +221,7 @@ public class ArbolB<T extends Comparable<T>> {
       }
     } else {
       for (pos = 0; pos < x.n; pos++) {
-        if (x.key[pos].compareTo(key) > 0) {
+        if (x.key.get(pos).compareTo(key) > 0) {
           break;
         }
       }
@@ -224,16 +232,16 @@ public class ArbolB<T extends Comparable<T>> {
       }
       if (true) {
         Node<T> nb = null;
-        T devider;
+        T divider;
 
         if (pos != x.n && x.child[pos + 1].n >= T) {
-          devider = x.key[pos];
+          divider = x.key.get(pos);
           nb = x.child[pos + 1];
-          x.key[pos] = nb.key[0];
-          tmp.key[tmp.n++] = devider;
+          x.key.set(pos, nb.key.get(0));
+          tmp.key.set(tmp.n++, divider);
           tmp.child[tmp.n] = nb.child[0];
           for (int i = 1; i < nb.n; i++) {
-            nb.key[i - 1] = nb.key[i];
+            nb.key.set(i - 1, nb.key.get(i));
           }
           for (int i = 1; i <= nb.n; i++) {
             nb.child[i - 1] = nb.child[i];
@@ -242,17 +250,16 @@ public class ArbolB<T extends Comparable<T>> {
           Remove(tmp, key);
           return;
         } else if (pos != 0 && x.child[pos - 1].n >= T) {
-
-          devider = x.key[pos - 1];
+          divider = x.key.get(pos - 1);
           nb = x.child[pos - 1];
-          x.key[pos - 1] = nb.key[nb.n - 1];
+          x.key.set(pos - 1, nb.key.get(nb.n - 1));
           Node<T> child = nb.child[nb.n];
           nb.n--;
 
           for (int i = tmp.n; i > 0; i--) {
-            tmp.key[i] = tmp.key[i - 1];
+            tmp.key.set(i, tmp.key.get(i-1));
           }
-          tmp.key[0] = devider;
+          tmp.key.set(0, divider);
           for (int i = tmp.n + 1; i > 0; i--) {
             tmp.child[i] = tmp.child[i - 1];
           }
@@ -265,28 +272,28 @@ public class ArbolB<T extends Comparable<T>> {
           Node<T> rt = null;
           boolean last = false;
           if (pos != x.n) {
-            devider = x.key[pos];
+            divider = x.key.get(pos);
             lt = x.child[pos];
             rt = x.child[pos + 1];
           } else {
-            devider = x.key[pos - 1];
+            divider = x.key.get(pos - 1);
             rt = x.child[pos];
             lt = x.child[pos - 1];
             last = true;
             pos--;
           }
           for (int i = pos; i < x.n - 1; i++) {
-            x.key[i] = x.key[i + 1];
+            x.key.set(i, x.key.get(i + 1));
           }
           for (int i = pos + 1; i < x.n; i++) {
             x.child[i] = x.child[i + 1];
           }
           x.n--;
-          lt.key[lt.n++] = devider;
+          lt.key.set(lt.n++, divider);
 
           for (int i = 0, j = lt.n; i < rt.n + 1; i++, j++) {
             if (i < rt.n) {
-              lt.key[j] = rt.key[i];
+              lt.key.set(j, rt.key.get(i));
             }
             lt.child[j] = rt.child[i];
           }
@@ -322,9 +329,9 @@ public class ArbolB<T extends Comparable<T>> {
 
   private void FindKeys(T a, T b, Node<T> x, Stack<T> st) {
     int i = 0;
-    for (i = 0; i < x.n && x.key[i].compareTo(b) < 0; i++) {
-      if (x.key[i].compareTo(a) > 0) {
-        st.push(x.key[i]);
+    for (i = 0; i < x.n && x.key.get(i).compareTo(b) < 0; i++) {
+      if (x.key.get(i).compareTo(a) > 0) {
+        st.push(x.key.get(i));
       }
     }
     if (!x.leaf) {
@@ -346,29 +353,12 @@ public class ArbolB<T extends Comparable<T>> {
   private void Show(Node<T> x) {
     assert (x == null);
     for (int i = 0; i < x.n; i++) {
-      System.out.print(x.key[i] + " ");
+      System.out.print(x.key.get(i) + " ");
     }
     if (!x.leaf) {
       for (int i = 0; i < x.n + 1; i++) {
         Show(x.child[i]);
       }
     }
-  }
-
-  public static void main(String[] args) {
-    ArbolB b = new ArbolB(3);
-    b.Insert(8);
-    b.Insert(9);
-    b.Insert(10);
-    b.Insert(11);
-    b.Insert(15);
-    b.Insert(20);
-    b.Insert(17);
-
-    b.Show();
-
-    b.Remove(10);
-    System.out.println();
-    b.Show();
   }
 }
