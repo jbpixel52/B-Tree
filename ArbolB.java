@@ -2,8 +2,6 @@ import java.util.ArrayList;
 public class ArbolB<T extends Comparable<T>> {
 
     private int T;
-  
-    // Node creation
     public class Node<T> {
       int n;
       T key[];
@@ -29,7 +27,6 @@ public class ArbolB<T extends Comparable<T>> {
   
     private Node<T> root;
   
-    // Search key
     private Node<T> Search(Node<T> x, T key) {
       int i = 0;
       if (x == null)
@@ -49,7 +46,6 @@ public class ArbolB<T extends Comparable<T>> {
       }
     }
   
-    // Splitting the node
     private void Split(Node<T> x, int pos, Node<T> y) {
       Node<T> z = new Node<T>();
       z.leaf = y.leaf;
@@ -74,9 +70,8 @@ public class ArbolB<T extends Comparable<T>> {
       x.key[pos] = y.key[T - 1];
       x.n = x.n + 1;
     }
-  
-    // Inserting a value
-    public void Insert(final T key) {
+
+    public void Insert(T key) {
       Node<T> r = root;
       if (r.n == 2 * T - 1) {
         Node<T> s = new Node<T>();
@@ -90,9 +85,8 @@ public class ArbolB<T extends Comparable<T>> {
         insertValue(r, key);
       }
     }
-  
-    // Insert the node
-    final private void insertValue(Node<T> x, T k) {
+
+    private void insertValue(Node<T> x, T k) {
   
       if (x.leaf) {
         int i = 0;
@@ -144,9 +138,9 @@ public class ArbolB<T extends Comparable<T>> {
         return false;
       }
     }
-  
-    public void main(String[] args) {
-      ArbolB<T> b = new ArbolB<T>(3);
+
+    public static void main(String[] args) {
+      ArbolB<Integer> b = new ArbolB<Integer>(3);
       b.Insert(8);
       b.Insert(9);
       b.Insert(10);
@@ -158,9 +152,9 @@ public class ArbolB<T extends Comparable<T>> {
       b.Show();
   
       if (b.Contain(12)) {
-        System.out.println("\nfound");
+        System.out.println("\nEncontrado");
       } else {
-        System.out.println("\nnot found");
+        System.out.println("\nNo Encontrado");
       }
       ;
     }
