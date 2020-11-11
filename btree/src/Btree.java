@@ -1,29 +1,29 @@
 public class Btree<Key extends Comparable<Key>, Value>  {
-    // max children per B-tree node = M-1
-    // (must be even and greater than 2)
+    // hijos maximos por nodo = M - 1
+    // (debe ser igual o mayor a 2)
     private static final int M = 4;
 
-    private Node root;       // root of the B-tree
-    private int height;      // height of the B-tree
-    private int n;           // number of key-value pairs in the B-tree
+    private Node root;       // Raiz del arbol B
+    private int height;      // Altura del arbol B
+    private int n;           // numero de pares key-value en el arbol B
 
-    // helper B-tree node data type
+
     private static final class Node {
-        private int m;                             // number of children
-        private Entry[] children = new Entry[M];   // the array of children
+        private int m;                             // Numero de hijos
+        private Entry[] children = new Entry[M];   // arreglo de hijos
 
-        // create a node with k children
+        // crea un nodo con k hijos
         private Node(int k) {
             m = k;
         }
     }
 
-    // internal nodes: only use key and next
-    // external nodes: only use key and value
+    //Nodo Interno: usa next y key
+    //Nodo externo: usa key y value
     private static class Entry {
         private Comparable key;
         private Object val;
-        private Node next;     // helper field to iterate over array entries
+        private Node next;
         public Entry(Comparable key, Object val, Node next) {
             this.key  = key;
             this.val  = val;
@@ -32,46 +32,25 @@ public class Btree<Key extends Comparable<Key>, Value>  {
     }
 
     /**
-     * Initializes an empty B-tree.
+     * Inicializa un arbol B vacio
      */
     public Btree() {
         root = new Node(0);
     }
  
-    /**
-     * Returns true if this symbol table is empty.
-     * @return {@code true} if this symbol table is empty; {@code false} otherwise
-     */
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    /**
-     * Returns the number of key-value pairs in this symbol table.
-     * @return the number of key-value pairs in this symbol table
-     */
     public int size() {
         return n;
     }
 
-    /**
-     * Returns the height of this B-tree (for debugging).
-     *
-     * @return the height of this B-tree
-     */
     public int height() {
         return height;
     }
 
 
-    /**
-     * Returns the value associated with the given key.
-     *
-     * @param  key the key
-     * @return the value associated with the given key if the key is in the symbol table
-     *         and {@code null} if the key is not in the symbol table
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public Value get(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to get() is null");
         return search(root, key, height);
@@ -80,14 +59,14 @@ public class Btree<Key extends Comparable<Key>, Value>  {
     private Value search(Node x, Key key, int ht) {
         Entry[] children = x.children;
 
-        // external node
+        // nodo externo
         if (ht == 0) {
             for (int j = 0; j < x.m; j++) {
                 if (eq(key, children[j].key)) return (Value) children[j].val;
             }
         }
 
-        // internal node
+        // nodo interno
         else {
             for (int j = 0; j < x.m; j++) {
                 if (j+1 == x.m || less(key, children[j+1].key))
@@ -98,22 +77,12 @@ public class Btree<Key extends Comparable<Key>, Value>  {
     }
 
 
-    /**
-     * Inserts the key-value pair into the symbol table, overwriting the old value
-     * with the new value if the key is already in the symbol table.
-     * If the value is {@code null}, this effectively deletes the key from the symbol table.
-     *
-     * @param  key the key
-     * @param  val the value
-     * @throws IllegalArgumentException if {@code key} is {@code null}
-     */
     public void put(Key key, Value val) {
         if (key == null) throw new IllegalArgumentException("argument key to put() is null");
         Node u = insert(root, key, val, height); 
         n++;
         if (u == null) return;
 
-        // need to split root
         Node t = new Node(2);
         t.children[0] = new Entry(root.children[0].key, null, root);
         t.children[1] = new Entry(u.children[0].key, null, u);
@@ -125,14 +94,14 @@ public class Btree<Key extends Comparable<Key>, Value>  {
         int j;
         Entry t = new Entry(key, val, null);
 
-        // external node
+        // nodo externo
         if (ht == 0) {
             for (j = 0; j < h.m; j++) {
                 if (less(key, h.children[j].key)) break;
             }
         }
 
-        // internal node
+        // nodo interno
         else {
             for (j = 0; j < h.m; j++) {
                 if ((j+1 == h.m) || less(key, h.children[j+1].key)) {
@@ -154,7 +123,7 @@ public class Btree<Key extends Comparable<Key>, Value>  {
         else         return split(h);
     }
 
-    // split node in half
+    // divide el nodo a la mitad
     private Node split(Node h) {
         Node t = new Node(M/2);
         h.m = M/2;
@@ -163,11 +132,6 @@ public class Btree<Key extends Comparable<Key>, Value>  {
         return t;    
     }
 
-    /**
-     * Returns a string representation of this B-tree (for debugging).
-     *
-     * @return a string representation of this B-tree.
-     */
     public String toString() {
         return toString(root, height, "") + "\n";
     }
@@ -191,7 +155,7 @@ public class Btree<Key extends Comparable<Key>, Value>  {
     }
 
 
-    // comparison functions - make Comparable instead of Key to avoid casts
+    // funciones de comparacion - hacen Comparable en lugar de Key para evitar casteos
     private boolean less(Comparable k1, Comparable k2) {
         return k1.compareTo(k2) < 0;
     }
@@ -201,24 +165,38 @@ public class Btree<Key extends Comparable<Key>, Value>  {
     }
 
 
-    /**
-     * Unit tests the {@code BTree} data type.
-     *
-     * @param args the command-line arguments
-     */
     public static void main(String[] args) {
-        Btree<String, String> st = new Btree<String, String>();
+        Btree<String, Integer> st = new Btree<String, Integer>();
 
-        st.put("a", "1");
-        st.put("b",    "2");
-        st.put("c",         "3");
-        st.put("d",     "4");
-        st.put("e",        "5");
-        st.put("f",       "6");
-        st.put("g",         "7");
-        st.put("h",          "8");
-        st.put("i",       "9");
-        st.put("j",      "10");
+        st.put("a",  1);
+        st.put("b",     2);
+        st.put("c",          3);
+        st.put("d",      4);
+        st.put("e",         5);
+        st.put("f",        6);
+        st.put("g",          7);
+        st.put("h",           8);
+        st.put("i",        9);
+        st.put("j",      10);
+        st.put("k",      11);
+        st.put("l",         12);
+        st.put("m",      13);
+        st.put("n",         14);
+        st.put("o",         15);
+        st.put("p",         16);
+        st.put("q",         17);
+        st.put("r",         18);
+        st.put("s",         19);
+        st.put("t",         20);
+        st.put("u",         21);
+        st.put("v",         22);
+        st.put("w",         23);
+        st.put("x",         24);
+        st.put("y",         25);
+        st.put("z",         26);
+
+
+        System.out.println(st.search(st.root, "j", st.height));
 
         System.out.println("size:    " + st.size());
         System.out.println("height:  " + st.height());
