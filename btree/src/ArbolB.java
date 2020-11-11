@@ -13,6 +13,15 @@ public class ArbolB<T extends Comparable<T>> {
     Node<T> child[];
     boolean leaf = true;
 
+    public Node()
+    {
+      for(int i = 0; i < 2 * T - 1; i++)
+      {
+      
+        key.add(null);
+
+      }
+    }
     public int Find(T k) {
       for (int i = 0; i < this.n; i++) {
         if (this.key.get(i) == k) {
@@ -83,7 +92,8 @@ public class ArbolB<T extends Comparable<T>> {
     x.n = x.n + 1;
   }
 
-  public void Insert(final T key) {
+  public void Insert(final T key) 
+  {
     Node<T> r = root;
     if (r.n == 2 * T - 1) {
       Node<T> s = new Node();
@@ -105,17 +115,14 @@ public class ArbolB<T extends Comparable<T>> {
       int i = 0;
       for (i = x.n - 1; i >= 0 && k.compareTo(x.key.get(i)) < 0; i--) {
         //     x.key.set(i + 1, x.key.get(i));
-        x.key.add(x.key.get(i));
+        //x.key.add(x.key.get(i));
+        x.key.set(i+1,x.key.get(i));
       }
-      // x.key.set(i + 1, k);
-      x.key.add(k);
-      x.n = x.n + 1;
+      x.key.set(i + 1, k);
+      //x.key.add(k);
+      x.n ++;
     } else {
-      int i = 0;
-      for (i = x.n - 1; i >= 0 && k.compareTo(x.key.get(i)) < 0; i--) {
-      }
-      ;
-      i++;
+      int i = 1;
       Node<T> tmp = x.child[i];
       if (tmp.n == 2 * T - 1) {
         Split(x, i, tmp);
@@ -132,202 +139,202 @@ public class ArbolB<T extends Comparable<T>> {
     Show(root);
   }
 
-  private void Remove(Node<T> x, T key) {
-    int pos = x.Find(key);
-    if (pos != -1) {
-      if (x.leaf) {
-        int i = 0;
-        for (i = 0; i < x.n && x.key.get(i) != key; i++) {
-        }
-        ;
-        for (; i < x.n; i++) {
-          if (i != 2 * T - 2) {
-            x.key.set(i, x.key.get(i + 1));
-          }
-        }
-        x.n--;
-        return;
-      }
-      if (!x.leaf) {
+  // private void Remove(Node<T> x, T key) {
+  //   int pos = x.Find(key);
+  //   if (pos != -1) {
+  //     if (x.leaf) {
+  //       int i = 0;
+  //       for (i = 0; i < x.n && x.key.get(i) != key; i++) {
+  //       }
+  //       ;
+  //       for (; i < x.n; i++) {
+  //         if (i != 2 * T - 2) {
+  //           x.key.set(i, x.key.get(i + 1));
+  //         }
+  //       }
+  //       x.n--;
+  //       return;
+  //     }
+  //     if (!x.leaf) {
 
-        Node<T> pred = x.child[pos];
-        T predKey;
-        if (pred.n >= T) {
-          for (;;) {
-            if (pred.leaf) {
-              System.out.println(pred.n);
-              predKey = pred.key.get(pred.n - 1);
-              break;
-            } else {
-              pred = pred.child[pred.n];
-            }
-          }
-          Remove(pred, predKey);
-          x.key.set(pos, predKey);
-          return;
-        }
+  //       Node<T> pred = x.child[pos];
+  //       T predKey;
+  //       if (pred.n >= T) {
+  //         for (;;) {
+  //           if (pred.leaf) {
+  //             System.out.println(pred.n);
+  //             predKey = pred.key.get(pred.n - 1);
+  //             break;
+  //           } else {
+  //             pred = pred.child[pred.n];
+  //           }
+  //         }
+  //         Remove(pred, predKey);
+  //         x.key.set(pos, predKey);
+  //         return;
+  //       }
 
-        Node<T> nextNode = x.child[pos + 1];
-        if (nextNode.n >= T) {
-          // T nextKey = nextNode.key[0];
-          T nextKey = nextNode.key.get(0);
-          if (!nextNode.leaf) {
-            nextNode = nextNode.child[0];
-            for (;;) {
-              if (nextNode.leaf) {
-                nextKey = nextNode.key.get(nextNode.n - 1);
-                break;
-              } else {
-                nextNode = nextNode.child[nextNode.n];
-              }
-            }
-          }
-          Remove(nextNode, nextKey);
-          x.key.set(pos, nextKey);
-          return;
-        }
+  //       Node<T> nextNode = x.child[pos + 1];
+  //       if (nextNode.n >= T) {
+  //         // T nextKey = nextNode.key[0];
+  //         T nextKey = nextNode.key.get(0);
+  //         if (!nextNode.leaf) {
+  //           nextNode = nextNode.child[0];
+  //           for (;;) {
+  //             if (nextNode.leaf) {
+  //               nextKey = nextNode.key.get(nextNode.n - 1);
+  //               break;
+  //             } else {
+  //               nextNode = nextNode.child[nextNode.n];
+  //             }
+  //           }
+  //         }
+  //         Remove(nextNode, nextKey);
+  //         x.key.set(pos, nextKey);
+  //         return;
+  //       }
 
-        int temp = pred.n + 1;
-        // pred.key[pred.n++] = x.key[pos];
-        pred.key.set(pred.n++, x.key.get(pos));
-        for (int i = 0, j = pred.n; i < nextNode.n; i++) {
-          // pred.key[j++] = nextNode.key[i];
-          pred.key.set(j++, nextNode.key.get(i));
-          pred.n++;
-        }
-        for (int i = 0; i < nextNode.n + 1; i++) {
-          pred.child[temp++] = nextNode.child[i];
-        }
+  //       int temp = pred.n + 1;
+  //       // pred.key[pred.n++] = x.key[pos];
+  //       pred.key.set(pred.n++, x.key.get(pos));
+  //       for (int i = 0, j = pred.n; i < nextNode.n; i++) {
+  //         // pred.key[j++] = nextNode.key[i];
+  //         pred.key.set(j++, nextNode.key.get(i));
+  //         pred.n++;
+  //       }
+  //       for (int i = 0; i < nextNode.n + 1; i++) {
+  //         pred.child[temp++] = nextNode.child[i];
+  //       }
 
-        x.child[pos] = pred;
-        for (int i = pos; i < x.n; i++) {
-          if (i != 2 * T - 2) {
-            // x.key[i] = x.key[i + 1];
-            x.key.set(i, x.key.get(i + 1));
-          }
-        }
-        for (int i = pos + 1; i < x.n + 1; i++) {
-          if (i != 2 * T - 1) {
-            x.child[i] = x.child[i + 1];
-          }
-        }
-        x.n--;
-        if (x.n == 0) {
-          if (x == root) {
-            root = x.child[0];
-          }
-          x = x.child[0];
-        }
-        Remove(pred, key);
-        return;
-      }
-    } else {
-      for (pos = 0; pos < x.n; pos++) {
-        if (x.key.get(pos).compareTo(key) > 0) {
-          break;
-        }
-      }
-      Node<T> tmp = x.child[pos];
-      if (tmp.n >= T) {
-        Remove(tmp, key);
-        return;
-      }
-      if (true) {
-        Node<T> nb = null;
-        T divider;
+  //       x.child[pos] = pred;
+  //       for (int i = pos; i < x.n; i++) {
+  //         if (i != 2 * T - 2) {
+  //           // x.key[i] = x.key[i + 1];
+  //           x.key.set(i, x.key.get(i + 1));
+  //         }
+  //       }
+  //       for (int i = pos + 1; i < x.n + 1; i++) {
+  //         if (i != 2 * T - 1) {
+  //           x.child[i] = x.child[i + 1];
+  //         }
+  //       }
+  //       x.n--;
+  //       if (x.n == 0) {
+  //         if (x == root) {
+  //           root = x.child[0];
+  //         }
+  //         x = x.child[0];
+  //       }
+  //       Remove(pred, key);
+  //       return;
+  //     }
+  //   } else {
+  //     for (pos = 0; pos < x.n; pos++) {
+  //       if (x.key.get(pos).compareTo(key) > 0) {
+  //         break;
+  //       }
+  //     }
+  //     Node<T> tmp = x.child[pos];
+  //     if (tmp.n >= T) {
+  //       Remove(tmp, key);
+  //       return;
+  //     }
+  //     if (true) {
+  //       Node<T> nb = null;
+  //       T divider;
 
-        if (pos != x.n && x.child[pos + 1].n >= T) {
-          divider = x.key.get(pos);
-          nb = x.child[pos + 1];
-          x.key.set(pos, nb.key.get(0));
-          tmp.key.set(tmp.n++, divider);
-          tmp.child[tmp.n] = nb.child[0];
-          for (int i = 1; i < nb.n; i++) {
-            nb.key.set(i - 1, nb.key.get(i));
-          }
-          for (int i = 1; i <= nb.n; i++) {
-            nb.child[i - 1] = nb.child[i];
-          }
-          nb.n--;
-          Remove(tmp, key);
-          return;
-        } else if (pos != 0 && x.child[pos - 1].n >= T) {
-          divider = x.key.get(pos - 1);
-          nb = x.child[pos - 1];
-          x.key.set(pos - 1, nb.key.get(nb.n - 1));
-          Node<T> child = nb.child[nb.n];
-          nb.n--;
+  //       if (pos != x.n && x.child[pos + 1].n >= T) {
+  //         divider = x.key.get(pos);
+  //         nb = x.child[pos + 1];
+  //         x.key.set(pos, nb.key.get(0));
+  //         tmp.key.set(tmp.n++, divider);
+  //         tmp.child[tmp.n] = nb.child[0];
+  //         for (int i = 1; i < nb.n; i++) {
+  //           nb.key.set(i - 1, nb.key.get(i));
+  //         }
+  //         for (int i = 1; i <= nb.n; i++) {
+  //           nb.child[i - 1] = nb.child[i];
+  //         }
+  //         nb.n--;
+  //         Remove(tmp, key);
+  //         return;
+  //       } else if (pos != 0 && x.child[pos - 1].n >= T) {
+  //         divider = x.key.get(pos - 1);
+  //         nb = x.child[pos - 1];
+  //         x.key.set(pos - 1, nb.key.get(nb.n - 1));
+  //         Node<T> child = nb.child[nb.n];
+  //         nb.n--;
 
-          for (int i = tmp.n; i > 0; i--) {
-            tmp.key.set(i, tmp.key.get(i - 1));
-          }
-          tmp.key.set(0, divider);
-          for (int i = tmp.n + 1; i > 0; i--) {
-            tmp.child[i] = tmp.child[i - 1];
-          }
-          tmp.child[0] = child;
-          tmp.n++;
-          Remove(tmp, key);
-          return;
-        } else {
-          Node<T> lt = null;
-          Node<T> rt = null;
-          boolean last = false;
-          if (pos != x.n) {
-            divider = x.key.get(pos);
-            lt = x.child[pos];
-            rt = x.child[pos + 1];
-          } else {
-            divider = x.key.get(pos - 1);
-            rt = x.child[pos];
-            lt = x.child[pos - 1];
-            last = true;
-            pos--;
-          }
-          for (int i = pos; i < x.n - 1; i++) {
-            x.key.set(i, x.key.get(i + 1));
-          }
-          for (int i = pos + 1; i < x.n; i++) {
-            x.child[i] = x.child[i + 1];
-          }
-          x.n--;
-          lt.key.set(lt.n++, divider);
+  //         for (int i = tmp.n; i > 0; i--) {
+  //           tmp.key.set(i, tmp.key.get(i - 1));
+  //         }
+  //         tmp.key.set(0, divider);
+  //         for (int i = tmp.n + 1; i > 0; i--) {
+  //           tmp.child[i] = tmp.child[i - 1];
+  //         }
+  //         tmp.child[0] = child;
+  //         tmp.n++;
+  //         Remove(tmp, key);
+  //         return;
+  //       } else {
+  //         Node<T> lt = null;
+  //         Node<T> rt = null;
+  //         boolean last = false;
+  //         if (pos != x.n) {
+  //           divider = x.key.get(pos);
+  //           lt = x.child[pos];
+  //           rt = x.child[pos + 1];
+  //         } else {
+  //           divider = x.key.get(pos - 1);
+  //           rt = x.child[pos];
+  //           lt = x.child[pos - 1];
+  //           last = true;
+  //           pos--;
+  //         }
+  //         for (int i = pos; i < x.n - 1; i++) {
+  //           x.key.set(i, x.key.get(i + 1));
+  //         }
+  //         for (int i = pos + 1; i < x.n; i++) {
+  //           x.child[i] = x.child[i + 1];
+  //         }
+  //         x.n--;
+  //         lt.key.set(lt.n++, divider);
 
-          for (int i = 0, j = lt.n; i < rt.n + 1; i++, j++) {
-            if (i < rt.n) {
-              lt.key.set(j, rt.key.get(i));
-            }
-            lt.child[j] = rt.child[i];
-          }
-          lt.n += rt.n;
-          if (x.n == 0) {
-            if (x == root) {
-              root = x.child[0];
-            }
-            x = x.child[0];
-          }
-          Remove(lt, key);
-          return;
-        }
-      }
-    }
-  }
+  //         for (int i = 0, j = lt.n; i < rt.n + 1; i++, j++) {
+  //           if (i < rt.n) {
+  //             lt.key.set(j, rt.key.get(i));
+  //           }
+  //           lt.child[j] = rt.child[i];
+  //         }
+  //         lt.n += rt.n;
+  //         if (x.n == 0) {
+  //           if (x == root) {
+  //             root = x.child[0];
+  //           }
+  //           x = x.child[0];
+  //         }
+  //         Remove(lt, key);
+  //         return;
+  //       }
+  //     }
+  //   }
+  // }
 
-  public void Remove(T key) {
-    Node<T> x = Search(root, key);
-    if (x == null) {
-      return;
-    }
-    Remove(root, key);
-  }
+  // public void Remove(T key) {
+  //   Node<T> x = Search(root, key);
+  //   if (x == null) {
+  //     return;
+  //   }
+  //   Remove(root, key);
+  // }
 
-  public void Task(T a, T b) {
-    Stack<T> st = new Stack<>();
-    FindKeys(a, b, root, st);
-    while (st.isEmpty() == false) {
-      this.Remove(root, st.pop());
-    }
-  }
+  // public void Task(T a, T b) {
+  //   Stack<T> st = new Stack<>();
+  //   FindKeys(a, b, root, st);
+  //   while (st.isEmpty() == false) {
+  //     this.Remove(root, st.pop());
+  //   }
+  // }
 
   private void FindKeys(T a, T b, Node<T> x, Stack<T> st) {
     int i = 0;
@@ -352,7 +359,8 @@ public class ArbolB<T extends Comparable<T>> {
   }
 
   // Show the node
-  private void Show(Node<T> x) {
+  private void Show(Node<T> x)
+  {
     assert (x == null);
     for (int i = 0; i < x.n; i++) {
       System.out.print(x.key.get(i) + " ");

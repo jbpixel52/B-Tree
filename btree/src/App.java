@@ -10,8 +10,14 @@ public class App {
 
         Random random = new Random();
         ArrayList<Integer> randoms = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            int randomNumber = random.nextInt(100 - 0) + 0;
+        for (int i = 0; i < 100; i++) 
+        {
+            int randomNumber = random.nextInt(200) + 0;
+            
+            while(randoms.contains(randomNumber))
+            {
+                randomNumber = random.nextInt(200) + 0;
+            }
             randoms.add(randomNumber );
         }
         for (Integer integer : randoms) {
