@@ -15,31 +15,25 @@ public class Nodo<T extends Comparable<T>> {
     // Un nodo no hoja con k hijos tiene k-1 valores O tener k valores equivale
     // a tener k+1 hijos
     // Todas las hojas tienen la misma altura siempre
-    private ArrayList<Nodo> kids; // pointers
-    private ArrayList<T> values = new ArrayList<T>();
+    private ArrayList<Nodo> kids; // pointers de hijos
+    private ArrayList<T> values; //keys en otrros ejemplos
+    public int T = 0; // orden minimo
+    public int nKeys = 0; //numero de llaves
+    public boolean leaf = false; //Es hoja si o no?
 
-    // private Nodo<T> next;
-
-    public void Nodo() {
-        this.kids = null;
-        this.values = null;
+    public Nodo(int T, boolean leaf)
+    {
+        this.T = T;
+        this.leaf = leaf;
+        this.values  = new ArrayList<T>();
+        this.kids = new ArrayList<Nodo>();
+        this.nKeys = 0;//empieza vacio
+        for (int i = 0; i < 2*T-1 ;i++)
+            this.values.set(i, null);
+        for (int i = 0; i < 2*T ;i++)  
+            this.kids.set(i,null); 
 
     }
 
-    public void addValue(T value) {
-        this.values.add(value);
-        // Ordenar hijos OrderValues();
-    }
-
-    public void addchild(Nodo child) {
-        this.kids.add(child);
-        Collections.sort((List<T>) this.kids);
-    }
-
-    public boolean isLeaf() {
-        if (this.kids.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
+    
 }
